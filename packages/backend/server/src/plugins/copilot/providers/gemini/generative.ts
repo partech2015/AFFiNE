@@ -2,9 +2,15 @@ import {
   createGoogleGenerativeAI,
   type GoogleGenerativeAIProvider,
 } from '@ai-sdk/google';
+import { Tool } from 'ai';
 import z from 'zod';
 
-import { CopilotProviderType, ModelInputType, ModelOutputType } from '../types';
+import {
+  CopilotChatTools,
+  CopilotProviderType,
+  ModelInputType,
+  ModelOutputType,
+} from '../types';
 import { GeminiProvider } from './gemini';
 
 export type GeminiGenerativeConfig = {
@@ -36,6 +42,24 @@ export class GeminiGenerativeProvider extends GeminiProvider<GeminiGenerativeCon
             ModelOutputType.Structured,
           ],
           defaultForOutputType: true,
+        },
+      ],
+    },
+    {
+      name: 'Gemini 2.5 Flash Lite',
+      id: 'gemini-2.5-flash-lite',
+      capabilities: [
+        {
+          input: [
+            ModelInputType.Text,
+            ModelInputType.Image,
+            ModelInputType.Audio,
+          ],
+          output: [
+            ModelOutputType.Text,
+            ModelOutputType.Object,
+            ModelOutputType.Structured,
+          ],
         },
       ],
     },
@@ -90,6 +114,18 @@ export class GeminiGenerativeProvider extends GeminiProvider<GeminiGenerativeCon
 
   protected instance!: GoogleGenerativeAIProvider;
 
+  override getProviderSpecificTools(
+    toolName: CopilotChatTools,
+    model: string
+  ): [string, Tool?] | undefined {
+    if (toolName === 'webSearch') {
+      return ['google_search', this.instance.tools.googleSearch({})];
+    } else if (toolName === 'urlContext') {
+      return ['url_context', this.instance.tools.urlContext({})];
+    }
+    return;
+  }
+
   override configured(): boolean {
     return !!this.config.apiKey;
   }
@@ -112,7 +148,9 @@ export class GeminiGenerativeProvider extends GeminiProvider<GeminiGenerativeCon
           `${baseUrl}/models?key=${this.config.apiKey}`
         )
           .then(r => r.json())
-          .then(r => ModelListSchema.parse(r));
+          .then(
+            r => (console.log(JSON.stringify(r)), ModelListSchema.parse(r))
+          );
         this.onlineModelList = models.map(model =>
           model.name.replace('models/', '')
         );

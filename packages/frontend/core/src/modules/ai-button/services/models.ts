@@ -57,9 +57,9 @@ export class AIModelService extends Service {
       this.subscriptionService.subscription.ai$.value?.status ===
       SubscriptionStatus.Active;
     const model = this.models.value.find(model => model.id === modelId);
-    if (!isSubscribed && model?.isPro) {
-      return;
-    }
+    //if (!isSubscribed && model?.isPro) {
+    //  return;
+    // }
     this.globalStateService.globalState.set(AI_MODEL_ID_KEY, modelId);
   };
 

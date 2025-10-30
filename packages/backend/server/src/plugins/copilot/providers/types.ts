@@ -71,6 +71,8 @@ export const PromptToolsSchema = z
     'docSemanticSearch',
     // work with exa/model internal tools
     'webSearch',
+    //access to real-time web content
+    'urlContext',
     // artifact tools
     'docCompose',
     // section editing

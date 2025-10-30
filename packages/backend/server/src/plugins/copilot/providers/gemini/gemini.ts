@@ -285,9 +285,10 @@ export abstract class GeminiProvider<T> extends CopilotProvider<T> {
 
   private getGeminiOptions(options: CopilotChatOptions, model: string) {
     const result: GoogleGenerativeAIProviderOptions = {};
+
     if (options?.reasoning && this.isReasoningModel(model)) {
       result.thinkingConfig = {
-        thinkingBudget: 12000,
+        thinkingBudget: model === 'gemini-2.5-pro' ? 32768 : 24576,
         includeThoughts: true,
       };
     }

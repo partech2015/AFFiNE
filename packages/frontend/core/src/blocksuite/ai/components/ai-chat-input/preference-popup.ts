@@ -172,12 +172,12 @@ export class ChatInputPreference extends SignalWatcher(
                 </div>
               `,
               select: () => {
-                if (model.isPro && !isSubscribed) {
-                  this.notificationService.toast(
-                    `Pro models require an AFFiNE AI subscription.`
-                  );
-                  return;
-                }
+                // if (model.isPro && !isSubscribed) {
+                //   this.notificationService.toast(
+                //      `Pro models require an AFFiNE AI subscription.`
+                //   );
+                //   return;
+                // }
                 this.aiModelService.setModel(model.id);
               },
             });
