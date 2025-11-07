@@ -144,6 +144,7 @@ export abstract class CopilotProvider<C = any> {
   }
 
   protected getProviderSpecificTools(
+    options: CopilotChatOptions,
     _toolName: CopilotChatTools,
     _model: string
   ): [string, Tool?] | undefined {
@@ -168,8 +169,11 @@ export abstract class CopilotProvider<C = any> {
         strict: false,
       });
 
+      //谷歌搜索同时支持urlContext
+      if (options.webSearch) options.tools.push('urlContext');
+
       for (const tool of options.tools) {
-        const toolDef = this.getProviderSpecificTools(tool, model);
+        const toolDef = this.getProviderSpecificTools(options, tool, model);
         if (toolDef) {
           // allow provider prevent tool creation
           if (toolDef[1]) {

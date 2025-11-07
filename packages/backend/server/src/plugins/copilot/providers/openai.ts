@@ -386,6 +386,7 @@ export class OpenAIProvider extends CopilotProvider<OpenAIConfig> {
   }
 
   override getProviderSpecificTools(
+    options: CopilotChatOptions,
     toolName: CopilotChatTools,
     model: string
   ): [string, Tool?] | undefined {

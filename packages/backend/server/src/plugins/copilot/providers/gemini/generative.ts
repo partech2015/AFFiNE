@@ -6,6 +6,7 @@ import { Tool } from 'ai';
 import z from 'zod';
 
 import {
+  CopilotChatOptions,
   CopilotChatTools,
   CopilotProviderType,
   ModelInputType,
@@ -115,12 +116,13 @@ export class GeminiGenerativeProvider extends GeminiProvider<GeminiGenerativeCon
   protected instance!: GoogleGenerativeAIProvider;
 
   override getProviderSpecificTools(
+    options: CopilotChatOptions,
     toolName: CopilotChatTools,
     model: string
   ): [string, Tool?] | undefined {
-    if (toolName === 'webSearch') {
+    if (options?.webSearch && toolName === 'webSearch') {
       return ['google_search', this.instance.tools.googleSearch({})];
-    } else if (toolName === 'urlContext') {
+    } else if (options?.webSearch && toolName === 'urlContext') {
       return ['url_context', this.instance.tools.urlContext({})];
     }
     return;
